@@ -15,13 +15,11 @@ const start=async()=>{
     await mongoose.connect(process.env.mongo_uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-    });
+    }).catch(console.error);
     app.listen(port,()=>{
       console.log(`server started listening on port ${port}`)
   })  
 }
-
-
 
 const todo=require('./models/todo');
 app.get('/todos',async(req,res)=>{
