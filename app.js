@@ -9,20 +9,28 @@ app.use(cors());
 app.use(express.json());
 const port=process.env.PORT|| 1337;
 
-mongoose
-  .connect(process.env.mongo_uri, {})
-  .then(() => {
-    console.log("connected to db");
-  })
-  .catch(console.error);
+
+const start=async()=>{
+  await mongoose
+    .connect(process.env.mongo_uri, {})
+    .then(() => {
+      console.log("connected to db");
+    })
+    .catch(console.error);
+    app.listen(port,()=>{
+      console.log(`server started listening on port ${port}`)
+  })  
+  
+}
 
 
-  const todo=require('./models/todo');
-  app.get('/todos',async(req,res)=>{
-    const todos=await todo.find();
-    res.send(todos);
-    console.log(todos);
-  })
+
+const todo=require('./models/todo');
+app.get('/todos',async(req,res)=>{
+  const todos=await todo.find();
+  res.send(todos);
+  console.log(todos);
+})
 
 
 app.post('/todo/new',async(req,res,next)=>{
@@ -41,12 +49,11 @@ app.delete('/todo/delete/:id',async(req,res)=>{
 })
 
 app.put('/todo/complete/:id',async(req,res)=>{
-const result=await todo.findById(req.params.id);
-result.completed=!result.completed;
-result.save();
-res.json(result);
+  const result=await todo.findById(req.params.id);
+  result.completed=!result.completed;
+  result.save();
+  res.json(result);
 })
-app.listen(port,()=>{
-    console.log(`server started listening on port ${port}`)
-})  
 
+
+start();
