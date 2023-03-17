@@ -11,16 +11,14 @@ const port=process.env.PORT|| 1337;
 
 
 const start=async()=>{
-  await mongoose
-    .connect(process.env.mongo_uri, {})
-    .then(() => {
-      console.log("connected to db");
-    })
-    .catch(console.error);
+  mongoose.set('strictQuery', true);
+    await mongoose.connect(process.env.mongo_uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
     app.listen(port,()=>{
       console.log(`server started listening on port ${port}`)
   })  
-  
 }
 
 
